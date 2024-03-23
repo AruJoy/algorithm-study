@@ -1,0 +1,18 @@
+while True:
+    print('a부터 b까지')
+    a = int(input('정수 a를 입력하세요.: '))
+    b = int(input('정수 b를 입력하세요.: '))
+
+    if a > b :
+        a, b = b, a
+    
+    sum = 0
+    
+    for i in range(a, b):
+        print(f'{i} + ', end = '')
+        sum += i
+    
+    print(f'{b} = ', end ='')
+    sum += b
+
+    print(sum)
