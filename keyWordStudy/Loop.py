@@ -117,9 +117,6 @@ def loopFunctionInList():
     
     return
 
-def useOfRecursive():
-    return
-
 useOfLoop()
 multipleLoop()
 breakAndContinue()

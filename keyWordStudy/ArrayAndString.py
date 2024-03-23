@@ -23,6 +23,8 @@ def multiDimensionalArray():
     print(arr2)
     print(arr3)
 
+    return
+
 def oneDimensionalArray():
     n=5
     arr1 = [0 for i in range(n)]
@@ -49,6 +51,8 @@ def oneDimensionalArray():
     print(arr4)
     
     dividingLine()
+    
+    return
 
 def string():
     a = 'abcdefg'
@@ -167,6 +171,8 @@ def string():
     dividingLine()
     print(",".join(["abc","def","ghi"]))
     print("XXX".join(["abc","def","ghi"]))
+    
+    return
 
 multiDimensionalArray()
 
