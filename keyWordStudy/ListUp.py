@@ -90,8 +90,6 @@ def mySort(inputList, n):
             print(inputList)
     
     return inputList
-
-
 print(mySort(inputList, len(inputList)-1))
 
 
