@@ -1,13 +1,7 @@
 from sys import stdin
 numberOfQueens = int(stdin.readline())
 checkerBoard = [[0 for i in range(numberOfQueens)] for i in range(numberOfQueens)]
-
 def setAttackRange(r,c):
-    for i in range(r-1, r+2):
-        for j in range(c-1, c+2):
-            if 0 <= i < numberOfQueens and 0 <= j < numberOfQueens:
-                checkerBoard[i][j] = 1
-    
     for i in range(numberOfQueens):
         if 0 <= r-i < numberOfQueens and 0<= i+c < numberOfQueens:
             checkerBoard[r-i][i+c] = 1
@@ -33,3 +27,4 @@ def adjustQueen(line, queens, case):
     return case
 
 print(adjustQueen(numberOfQueens, numberOfQueens, 0))
+print(type(checkerBoard))
