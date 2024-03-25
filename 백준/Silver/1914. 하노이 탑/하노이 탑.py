@@ -11,3 +11,4 @@ sqr = 2**n
 print(f'{sqr - 1}')
 if n < 21 :
     hanoi(n, 1, 2, 3)
+    #개같은거!
