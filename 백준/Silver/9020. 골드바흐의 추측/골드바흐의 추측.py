@@ -8,6 +8,8 @@ for i in range(num_inputs):
 
 primeList = 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97
 def isPrime(number, primeList):
+    if number % 2 == 0 and number !=2 :
+        return False
     if number == 1:
         return False
     if number in primeList:
