@@ -1,53 +1,63 @@
-#노드 클래스
+from sys import stdin
+
 class Node:
-    def __init__(self, item):
-        self.item = item
+    def __init__(self, value):
+        self.value = value
         self.left = None
         self.right = None
-#트리 구현체
-class BinaryTree():
-    def __init__(self):
-        self.root = None
-#전위 순회
-    def preOrder(self, n):
-        if n!= None:
-            print(n.item, '', end='')
-            if n.left:
-                self.preOrder(n.left)
-            if n.right:
-                self.preOrder(n.right)
-#후위순회
-    def postOrder(self, n):
-        if n!= None:
-            if n.left:
-                self.postOrder(n.left)
-            if n.right:
-                self.postOrder(n.right)
-            print(n.item, '',end = '')
-#중위 순회
-    def inOrder(self, n):
-        if n!= None:
-            if n.left:
-                self.inOrder(n.left)
-            print(n.item, '',end='')
-            if n.right:
-                self.inOrder(n.right)
-n1 = Node(10)
-n2 = Node(20)
-n3 = Node(30)
-n4 = Node(40)
-n5 = Node(50)
-n6 = Node(60)
-n7 = Node(70)
-n8 = Node(80)
 
-tree = BinaryTree()
-# 노드 연결 방식
-tree.root = n1
-n1.left = n2
-n1.right = n3
-n2.right = n5
-n2.left = n4
-n3.left = n6
-n3.right = n7
-n4.left = n8
+def preOrder(n):
+    if n!= None:
+        print(n.value, end='')
+        if n.left:
+            preOrder(n.left)
+        if n.right:
+            preOrder(n.right)
+def postOrder(n):
+    if n!= None:
+        if n.left:
+            postOrder(n.left)
+        if n.right:
+            postOrder(n.right)
+        print(n.value, end='')
+def inOrder(n):
+    if n!= None:
+        if n.left:
+            inOrder(n.left)
+        print(n.value, end='')
+        if n.right:
+            inOrder(n.right)
+root = None
+nodeList = list()
+inputSize = int(input())
+for i in range(inputSize):
+    if i == 0:
+        nodes = input().strip()
+        nodes = nodes.split(' ')
+        root= Node(nodes[0])
+        nodeList.append(root)
+        if nodes[1] != '.':
+            root.left = Node(nodes[1])
+            nodeList.append(root.left)
+        if nodes[2] != '.':
+            root.right = Node(nodes[2])
+            nodeList.append(root.right)
+    else:
+        nodes = input().strip()
+        nodes = nodes.split(' ')
+        for i in nodeList:
+            if i.value == nodes[0]:
+                if nodes[1] != '.':
+                    i.left = Node(nodes[1])
+                    nodeList.append(i.left)
+                if nodes[2] != '.':
+                    i.right = Node(nodes[2])
+                    nodeList.append(i.right)
+
+
+preOrder(root)
+print()
+inOrder(root)
+print()
+postOrder(root)
+print()

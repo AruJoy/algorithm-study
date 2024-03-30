@@ -1,3 +1,4 @@
+# https://velog.io/@ceusun0815/%ED%8C%8C%EC%9D%B4%EC%8D%ACPython-B-Tree-%EA%B5%AC%ED%98%84 참고
 class BTreeNode:
     def __init__(self):
         self.values = [] #노드에 저장된 값
