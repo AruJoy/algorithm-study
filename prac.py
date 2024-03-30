@@ -1,42 +1,38 @@
-from sys import stdin, setrecursionlimit
-setrecursionlimit(500000)
-class Node:
-    def __init__(self,value):
-        self.value = value
-        self.left = None
-        self.right = None
-root = None
-def insert(node, value):
-    if node.value > value:
-        if node.left == None:
-            node.left = Node(value)
-        else:
-            insert(node.left, value)
-    else:
-        if node.right == None:
-            node.right = Node(value)
-        else:
-            insert(node.right, value)
-def postOrder(n):
-    if n!= None:
-        if n.left:
-            postOrder(n.left)
-        if n.right:
-            postOrder(n.right)
-        print(n.value)
-nodes = list()
+from sys import stdin
+def preOrderToPostOrder(preOrder):
+    if not preOrder:
+        return []
 
+    root = preOrder[0]
+    left_sub_tree = [node for node in preOrder[1:] if node < root]
+    right_sub_tree = [node for node in preOrder[1:] if node >= root]
+
+    postOrder = []
+
+    postOrder.extend(preOrderToPostOrder(left_sub_tree))
+    postOrder.extend(preOrderToPostOrder(right_sub_tree))
+    postOrder.append(root)  # 루트를 마지막에 추가하여 후위 순회로 변환
+
+    return postOrder
+
+# 후위 순회 출력 함수
+def printPostOrder(postOrder):
+    for value in postOrder:
+        print(value)
+
+# 주어진 이진 검색 트리의 전위 순회 결과를 입력으로 받음
+preOrder = []
 while True:
     line = stdin.readline().strip()
     if line != "":
-        nodes.append(int(line))
+        preOrder.append(int(line))
     else:
         break
-    
-for i in range(len(nodes)):
-    if i == 0:
-        root = Node(nodes[i])
-    else:
-        insert(root, nodes[i])
 
-postOrder(root)
+
+
+# 전위 순회를 후위 순회로 변환
+postOrder = preOrderToPostOrder(preOrder)
+
+# 후위 순회 출력
+printPostOrder(postOrder)
