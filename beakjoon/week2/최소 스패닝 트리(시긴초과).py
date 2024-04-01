@@ -33,7 +33,7 @@ def mst(n, value):
         else:
             value += weight
             visited.append(go_to)
-            mst(n+1, value)
+            mst(go_to, value)
         if ans < 10**9:
             break
         value = tmp_value

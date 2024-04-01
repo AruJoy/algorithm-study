@@ -1,43 +1,45 @@
-from sys import stdin, setrecursionlimit
-setrecursionlimit(10**9)
-from heapq import heappop, heappush
-V, E = stdin.readline().split(' ')
-V = int(V)
-E = int(E)
-vertex = [list() for i in range(V +1)]
-visited = []
-visited.append(1)
-ans = 10**9
-
+from sys import stdin
+from heapq import heappush, heappop
+V, E, start = map(int, stdin.readline().split(' '))
+vertex = [list() for i in range(V + 1)]
+dfs = []
+bfs = []
+found = [False for i in range (V + 1)]
 for i in range(E):
-    edge = stdin.readline().split(' ')
-    heappush(vertex[int(edge[0])], [(int(edge[2])), int(edge[1])])
-    heappush(vertex[int(edge[1])], [(int(edge[2])), int(edge[0])])
+    node1, node2 = map(int, stdin.readline().split(' '))
+    vertex[node1].append(node2)
+    vertex[node2].append(node1)
+for node in vertex:
+    node.sort()
 
-def mst(n, value):
-    global ans
-    global visited
-    
-    if len(visited) == V:
-        if value < ans:
-            ans = value
-    if not vertex[n]:
-        return
-    
-    for j in range(len(vertex[n])):
-        tmp_value = value
-        tmp_visited = visited
-        weight, go_to = heappop(vertex[n])
-        if go_to in visited:
-            continue
-        else:
-            value += weight
-            visited.append(go_to)
-            mst(n+1, value)
-        if ans < 10**9:
-            break
-        value = tmp_value
-        visited = tmp_visited
+que = []
+bfs.append(start)
+found[start] = True
+for next_node in vertex[start]:
+    que.append(next_node)
+while que:
+    next_node = que.pop(0)
+    if not found[next_node]:
+        found[next_node] = True
+        bfs.append(next_node)
+        for nodes in vertex[next_node]:
+            que.append(nodes)
 
-mst(1, 0)
-print(ans)
+stack = []
+for i in range(len(found)):
+    found[i] = False
+
+def df_search(current_node):
+    if not found[current_node]:
+        found[current_node] = True
+        dfs.append(current_node)
+        for node in vertex[current_node]:
+            df_search(node)
+df_search(start)
+
+for i in dfs:
+    print(i, end=' ')
+print()
+for i in bfs:
+    print(i, end=' ')
+print()
