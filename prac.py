@@ -1,32 +1,45 @@
 from sys import stdin
-from heapq import heappop, heappush
-V, E = stdin.readline().split(' ')
-V = int(V)
-E = int(E)
-vertex = [list() for i in range(V +1)]
+from heapq import heappush, heappop
+V, E, start = map(int, stdin.readline().split(' '))
+vertex = [list() for i in range(V + 1)]
+dfs = []
+bfs = []
+found = [False for i in range (V + 1)]
 for i in range(E):
-    edge = stdin.readline().split(' ')
-    heappush(vertex[int(edge[0])], [(int(edge[2])), int(edge[1])])
-    heappush(vertex[int(edge[1])], [(int(edge[2])), int(edge[0])])
+    node1, node2 = map(int, stdin.readline().split(' '))
+    vertex[node1].append(node2)
+    vertex[node2].append(node1)
+for node in vertex:
+    node.sort()
 
-current_node = 1
-ans = 10**9
-visited = [False for i in range(V+1)]
-visited[current_node] = True
-
-
-que = list()
-for weight, next_node in vertex[current_node]:
-    heappush(que, (weight, next_node))
-
-weight_sum = 0
-
+que = []
+bfs.append(start)
+found[start] = True
+for next_node in vertex[start]:
+    que.append(next_node)
 while que:
-    node_weight, next_node = heappop(que)
-    if not visited[next_node]:
-        visited[next_node] = True
-        weight_sum += node_weight
-        for weight, node in vertex[next_node]:
-            heappush(que, (weight, node))
+    next_node = que.pop(0)
+    if not found[next_node]:
+        found[next_node] = True
+        bfs.append(next_node)
+        for nodes in vertex[next_node]:
+            que.append(nodes)
 
-print(weight_sum)
+stack = []
+for i in range(len(found)):
+    found[i] = False
+
+def df_search(current_node):
+    if not found[current_node]:
+        found[current_node] = True
+        dfs.append(current_node)
+        for node in vertex[current_node]:
+            df_search(node)
+df_search(start)
+
+for i in dfs:
+    print(i, end=' ')
+print()
+for i in bfs:
+    print(i, end=' ')
+print()
