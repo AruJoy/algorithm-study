@@ -1,32 +1,56 @@
 from sys import stdin
-from heapq import heappush, heappop
-V, E= map(int, stdin.readline().split(' '))
-vertex = [list() for i in range(V+1)]
-found = [False for i in range (V+1)]
-found[0] = True
-for i in range(E):
-    node1, node2 = map(int, stdin.readline().split(' '))
-    vertex[node1-1].append(node2)
-    vertex[node2-1].append(node1)
-for node in vertex:
-    node.sort()
+from collections import deque
 
-def bfs(start):
-    que = []
-    found[start] = True
-    for next_node in vertex[start]:
-        que.append(next_node)
-    while que:
-        next_node = que.pop(0)
-        if not found[next_node]:
-            found[next_node] = True
-            for nodes in vertex[next_node]:
-                que.append(nodes)
-count = 0
-while False in found:
-    for i in range(len(found)):
-        if found[i] == False:
-            bfs(i)
-            count += 1
+def bipartiteGraph():
+    V,E = map(int, stdin.readline().split(' '))
+    vertex = [list() for i in range(V+1)]
+    node_label = [None for i in range(V+1)]
+    node_label[0] = 'gray'
+    for i in range(E):
+        node1, node2 = map(int, stdin.readline().split(' '))
+        vertex[node2].append(node1)
+        vertex[node1].append(node2)
+    for start in range(1, V+1):
+        if node_label[start] == None:
+            node_label[start] = 1
+            stack = deque()
+            current_node_label = node_label[start]
+            for edge in vertex[start]:
+                if node_label[edge] == None:
+                    if current_node_label == 1:
+                        node_label[edge] = 0
+                        stack.append(edge)
+                    if current_node_label == 0:
+                        node_label[edge] = 1
+                        stack.append(edge)
+                elif current_node_label == 1 and node_label[edge] == 1:
+                    return False
+                elif current_node_label == 0 and node_label[edge] == 0:
+                    return False
+                while stack:
+                    current_node = stack.pop()
+                    current_node_label = node_label[current_node]
+                    for edge in vertex[current_node]:
+                        if node_label[edge] == None:
+                            if current_node_label == 1:
+                                node_label[edge] = 0
+                                stack.append(edge)
+                            if current_node_label == 0:
+                                node_label[edge] = 1
+                                stack.append(edge)
+                        elif current_node_label == 1 and node_label[edge] == 1:
+                            return False
+                        elif current_node_label == 0 and node_label[edge] == 0:
+                            return False
+                    
+    return True
 
-print(count)
+number_of_test = int(stdin.readline())
+result_set = list()
+for t in range(number_of_test):
+    result_set.append(bipartiteGraph())
+for i in result_set:
+    if i == True:
+        print('YES')
+    else:
+        print('NO')
