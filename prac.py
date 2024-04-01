@@ -1,43 +1,32 @@
-from sys import stdin, setrecursionlimit
-setrecursionlimit(10**9)
+from sys import stdin
 from heapq import heappop, heappush
 V, E = stdin.readline().split(' ')
 V = int(V)
 E = int(E)
 vertex = [list() for i in range(V +1)]
-visited = []
-visited.append(1)
-ans = 10**9
-
 for i in range(E):
     edge = stdin.readline().split(' ')
     heappush(vertex[int(edge[0])], [(int(edge[2])), int(edge[1])])
     heappush(vertex[int(edge[1])], [(int(edge[2])), int(edge[0])])
 
-def mst(n, value):
-    global ans
-    global visited
-    
-    if len(visited) == V:
-        if value < ans:
-            ans = value
-    if not vertex[n]:
-        return
-    
-    for j in range(len(vertex[n])):
-        tmp_value = value
-        tmp_visited = visited
-        weight, go_to = heappop(vertex[n])
-        if go_to in visited:
-            continue
-        else:
-            value += weight
-            visited.append(go_to)
-            mst(n+1, value)
-        if ans < 10**9:
-            break
-        value = tmp_value
-        visited = tmp_visited
+current_node = 1
+ans = 10**9
+visited = [False for i in range(V+1)]
+visited[current_node] = True
 
-mst(1, 0)
-print(ans)
+
+que = list()
+for weight, next_node in vertex[current_node]:
+    heappush(que, (weight, next_node))
+
+weight_sum = 0
+
+while que:
+    node_weight, next_node = heappop(que)
+    if not visited[next_node]:
+        visited[next_node] = True
+        weight_sum += node_weight
+        for weight, node in vertex[next_node]:
+            heappush(que, (weight, node))
+
+print(weight_sum)
