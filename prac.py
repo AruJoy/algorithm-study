@@ -17,19 +17,19 @@ def bipartiteGraph():
             current_node = start
             current_node_label = node_label[start]
             
-            for edge in vertex[start]:
+        for edge in vertex[start]:
+            if node_label[edge] == None:
+                node_label[edge] = -current_node_label
+                stack.append(edge)
+        while stack:
+            current_node = stack.pop()
+            current_node_label = node_label[current_node]
+            for edge in vertex[current_node]:
                 if node_label[edge] == None:
-                    node_label[edge] = -current_node_label
+                    node_label[edge] = - current_node_label
                     stack.append(edge)
-                while stack:
-                    current_node = stack.pop()
-                    current_node_label = node_label[current_node]
-                    for edge in vertex[current_node]:
-                        if node_label[edge] == None:
-                            node_label[edge] = - current_node_label
-                            stack.append(edge)
-                        elif current_node_label == node_label[edge]:
-                            return False
+                elif current_node_label == node_label[edge]:
+                    return False
     return True
 
 number_of_test = int(stdin.readline())
