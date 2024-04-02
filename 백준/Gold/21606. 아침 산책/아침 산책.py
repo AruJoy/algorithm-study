@@ -20,7 +20,7 @@ def find_hub():
                     hub_list[hub_number].append(node)
                     node_is_checked[node] = True
                     for edge in vertex[node]:
-                        if edge == 0:
+                        if vertex_is_indoor[edge] == 0:
                             stack.append(edge)
                 while stack:
                     edge = stack.pop()
@@ -28,7 +28,7 @@ def find_hub():
                         hub_list[hub_number].append(edge)
                         node_is_checked[edge] = True
                         for next_edge in vertex[edge]:
-                            if next_edge == 0:
+                            if vertex_is_indoor[next_edge] == 0 and node_is_checked[next_edge] == False:
                                 stack.append(next_edge)
             hub_number += 1
     return hub_list
