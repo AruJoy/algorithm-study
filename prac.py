@@ -1,45 +1,61 @@
 from sys import stdin
-import math
+from collections import deque
+def find_lighter_than_middle(lighter_list, middle_condition):
+    expired_balls = 0
+    for ball in lighter_list:
+        lighter_balls = 0
+        stack = deque()
+        checked_ball = [False for i in range(balls+1)]
+        for i in ball:
+            if not checked_ball[i]:
+                stack.append(i)
+                lighter_balls += 1
+                checked_ball[i] = True
+        while stack:
+            inner_ball = stack.pop()
+            for i in lighter_list[inner_ball]:
+                if not checked_ball[i]:
+                    stack.append(i)
+                    lighter_balls += 1
+                    checked_ball[i] = True
+        if lighter_balls >= middle_condition:
+            expired_balls += 1
+    return expired_balls
 
-def find_min_max(numbers, numbers_list, operator, arithmetic, minimum, maximum):
-    if len(operator) == numbers-1:
-        if operator[0] == 0:
-            result = int(number_list[0] + number_list[1])
-        elif operator[0] == 1:
-            result = int(number_list[0] - number_list[1])
-        elif operator[0] == 2:
-            result = int(number_list[0] * number_list[1])
-        elif operator[0] == 3:
-            result = int(number_list[0] / number_list[1])
-        for i in range(1, len(operator)):
-            if operator[i] == 0:
-                result = int(result + number_list[i+1])
-            elif operator[i] == 1:
-                result = int(result - number_list[i+1])
-            elif operator[i] == 2:
-                result = int(result * number_list[i+1])
-            elif operator[i] == 3:
-                result = int(result / number_list[i+1])
-        minimum = min(minimum, int(result))
-        maximum = max(maximum, int(result))
-        return[minimum, maximum]
-    
-    
-    for i in range(4):
-        temp_ari = arithmetic.copy()
-        temp_oper = operator.copy()
-        if arithmetic[i] != 0:
-            operator.append(i)
-            arithmetic[i] -= 1
-            minimum, maximum = find_min_max(numbers, numbers_list, operator, arithmetic, minimum, maximum)
-        arithmetic = temp_ari
-        operator = temp_oper
-    return[minimum, maximum]
+def find_heavier_than_middle(heavier_list, middle_condition):
+    expired_balls = 0
+    for ball in heavier_list:
+        heavier_balls = 0
+        stack = deque()
+        checked_ball = [False for i in range(balls+1)]
+        for i in ball:
+            if not checked_ball[i]:
+                stack.append(i)
+                heavier_balls += 1
+                checked_ball[i] = True
+        while stack:
+            inner_ball = stack.pop()
+            for i in heavier_list[inner_ball]:
+                if not checked_ball[i]:
+                    stack.append(i)
+                    heavier_balls += 1
+                    checked_ball[i] = True
+        if heavier_balls >= middle_condition:
+            expired_balls += 1
+    return expired_balls
 
-numbers = int(stdin.readline())
-number_list = list(map(int, stdin.readline().strip().split(' ')))
-arithmetic = list(map(int, stdin.readline().strip().split(' ')))
 
-minimum, maximum = find_min_max(numbers, number_list, list(), arithmetic, 1e10, -1e10)
-print(maximum)
-print(minimum)
+balls, edges = map(int, stdin.readline().split(' '))
+heavier_list = [list() for i in range(balls + 1)]
+lighter_list = [list() for i in range(balls + 1)]
+middle_condition = (balls+1) // 2 
+for i in range(edges):
+    heavier, lighter = map(int, stdin.readline().split(' '))
+    heavier_list[lighter].append(heavier)
+    lighter_list[heavier].append(lighter)
+
+result = 0
+result += find_lighter_than_middle(lighter_list, middle_condition)
+result += find_heavier_than_middle(heavier_list, middle_condition)
+
+print(result)
