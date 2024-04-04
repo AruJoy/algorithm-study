@@ -4,8 +4,9 @@ from collections import deque
 dx = [-1, 0, 1, 0]
 dy = [0, -1, 0, 1]
 def virus_fighting():
-    for column in range(chalet_size):
-        for row in range(chalet_size):
+    for virus in range(1, virus_types + 1):
+        while virus_coordinate[virus]:
+            column, row = virus_coordinate[virus].pop()
             if chalet[column][row] != 0:
                 for d in range(4):
                     if 0 <= row + dx[d] < chalet_size and 0 <= column + dy[d] < chalet_size:
@@ -16,6 +17,7 @@ def virus_fighting():
                 diffusion_coordinate = virus_diffusion[virus].pop()
                 if chalet[diffusion_coordinate[0]][diffusion_coordinate[1]] == 0:
                     chalet[diffusion_coordinate[0]][diffusion_coordinate[1]] = virus
+                    virus_coordinate[virus].append([diffusion_coordinate[0], diffusion_coordinate[1]])
     return
 
 chalet_size, virus_types = map(int, stdin.readline().split(' '))
@@ -30,7 +32,7 @@ for column in range(chalet_size):
         if line[rows] != 0:
             virus_coordinate[line[rows]].append([column, rows])
 
-target_rows, target_column, look_time= map(int, stdin.readline().split(' '))
+look_time, target_column, target_rows= map(int, stdin.readline().split(' '))
 time = 0
 while time < look_time:
     virus_fighting()
