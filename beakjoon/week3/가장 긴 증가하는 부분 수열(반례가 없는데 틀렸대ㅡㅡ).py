@@ -1,5 +1,4 @@
 from sys import stdin
-from heapq import heappop, heappush
 def LIS(sequence, length_of_sequence):
     lis_list = list()
     min_val = sequence[0]
