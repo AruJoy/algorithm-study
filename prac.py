@@ -1,5 +1,5 @@
 from sys import stdin
-from heapq import heappop, heappush
+
 def LIS(sequence, length_of_sequence):
     dp = [1] * length_of_sequence
     for i in range(1, length_of_sequence):
