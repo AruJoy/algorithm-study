@@ -1,63 +1,40 @@
 from sys import stdin
+from collections import deque
 from heapq import heappop, heappush
-def revolving_salesman(n_of_cities, route):
-    shortest_condition = dict()
-    init_condition = dict()
-    
-    for i in range(n_of_cities):
-        if i == 0:
-            continue
-        init_condition[i] = route[0][i]
-    shortest_condition[1] = init_condition
-    
-    for remain_node in range(2, n_of_cities+1):
-        before_conditions = shortest_condition[remain_node - 1]
-        current_conditions = dict()
-        for before_condition in before_conditions.keys():
-            for current_city in range(n_of_cities):
-                if (remain_node-1) == current_city:
-                    continue
-                
-                if type(before_condition) == int:
-                    remain_condition = [before_condition]
-                else: remain_condition = list(before_condition)
-                route_condition = before_conditions[before_condition]
-                
-                if current_city in remain_condition:
-                    continue
-                else:
-                    remain_condition.append(current_city)
-                    remain_condition_tuple = tuple(remain_condition)
-                    if not remain_condition_tuple in current_conditions.keys():
-                        current_conditions[remain_condition_tuple] = route_condition + route[remain_node - 1][current_city]
-                    else:
-                        current_conditions[remain_condition_tuple] = (min(current_conditions[remain_condition_tuple],
-                                                                                current_conditions[remain_condition_tuple] + route[remain_node - 1][current_city]))
-        shortest_condition[remain_node] = current_conditions
-        min_value = 10 ** 9
-    for result in shortest_condition[n_of_cities].keys():
-        count = 1
-        start = result[0]
-        end = result[start]
-        while count <= n_of_cities:
-            end = result[end]
+
+def find_lcs(sequence, allowed_duplication):
+    value_in_list = False
+    sc = dict()
+    cs_list = list()
+    count = 0 
+    for i in range(len(sequence)):
+        if not sequence[i] in sc.keys():
+            sc[sequence[i]] = deque()
+            sc[sequence[i]].append((1,i,0))
             count += 1
-            if start == end:
-                break
-        if count == n_of_cities:
-            min_value = min(min_value, shortest_condition[n_of_cities][result])
+            continue
+        
+        latest_condition = sc[sequence[i]][-1]
+        if latest_condition[0] >= allowed_duplication:
+            oldest_condition = sc[sequence[i]].popleft()
+            value_in_list = True
+            write_count = count -oldest_condition[2]
+            heappush(cs_list, -write_count)
+            count += 1
+            sc[sequence[i]].append((latest_condition[0]+1, i, oldest_condition[1]))
 
-    return min_value
+        else:
+            sc[sequence[i]].append((latest_condition[0]+1, i, sc[sequence[i]][-1][1]))
+            count += 1
+        
+    for i in sc.keys():
+        if len(sc[i]) != 0:
+            condition = sc[i].popleft()
+            heappush(cs_list, -(count-condition[1]))
+    if value_in_list == False:
+        return len(sequence)
+    return -heappop(cs_list)
 
-n_of_cities = int(stdin.readline())
-route = dict()
-route_table = dict()
-for _ in range(n_of_cities):
-    line = list(map(int, stdin.readline().split(' ')))
-    route[_]= line
-
-for _ in range(n_of_cities):
-    route_table[_] = [0 for i in range(n_of_cities)]
-
-
-print(revolving_salesman(n_of_cities, route))
+sequence_length, allowed_duplication = map(int, stdin.readline().split(' '))
+sequence = list(map(int, stdin.readline().split()))
+print(find_lcs(sequence, allowed_duplication))
