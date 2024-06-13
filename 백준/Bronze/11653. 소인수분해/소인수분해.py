@@ -1,16 +1,19 @@
 from sys import stdin
 from math import sqrt
 def factorization(num):
+    if num == 1:
+        return
+    
     number = num
-    factor_list = list()
-    while number != 1:
-        for i in range(2, number+1):
-            if number % i == 0:
-                factor_list.append(i)
-                number = number//i
-                break
-    for i in range(len(factor_list)):
-        print(factor_list[i])
+    factor = 2
+    while factor*factor <= num:
+        if number % factor == 0:
+            print(factor)
+            number = number // factor
+            continue
+        factor += 1
+    
+    if number > 1 : print(number)
     return
 
 num = int(stdin.readline())
