@@ -7,13 +7,13 @@ def sudden_attack_3(n_player):
     player_list = list(map(int, stdin.readline().split(' ')))
     joonwon = player_list.pop(0)
     
-    player_list.sort(reverse= True)
+    player_list.sort()
     
-    while player_list:
-        if(joonwon <= player_list[len(player_list)-1]):
+    for i in range(len(player_list)):
+        if(joonwon <= player_list[i]):
             print('No')
             return
-        joonwon += player_list.pop()
+        joonwon += player_list[i]
     
     print('Yes')
     return
