@@ -1,59 +1,43 @@
 from sys import stdin
-from collections import deque
 input = stdin.readline
 
+def find_root(kingdom_list, cur_node):
+    if kingdom_list[cur_node] < 0:
+        return cur_node
+    kingdom_list[cur_node] =  find_root(kingdom_list, kingdom_list[cur_node])
+    return kingdom_list[cur_node]
 
-n_kingdom, n_union = map(int, input().split(' '))
-adj_list = [list() for _ in range(n_kingdom + 1)]
-visited_list = [False for _ in range(n_kingdom + 1)]
-
-for _ in range(n_union):
-    kingdom_a, kingdom_b = map(int, input().split(' '))
-    adj_list[kingdom_a].append(kingdom_b)
-    adj_list[kingdom_b].append(kingdom_a)
-
-c_kingdom, h_kingdom, opportunity = map(int, input().split(' '))
-
-bfs = deque()
-c_union = 1
-bfs.append(c_kingdom)
-visited_list[c_kingdom] = True
-while bfs:
-    cur_kingdom = bfs.popleft()
+def union_mating():
+    n_kingdom, n_union = map(int, input().split(' '))
+    kingdom_list = [-1 for _ in range(n_kingdom + 1)]
+    for i in range(n_union):
+        kingdom_a, kingdom_b = map(int, input().split(' '))
+        root_a = find_root(kingdom_list, kingdom_a)
+        root_b = find_root(kingdom_list, kingdom_b)
+        if root_a != root_b:
+            if root_a < root_b:
+                kingdom_list[root_a] += kingdom_list[root_b]
+                kingdom_list[root_b] = root_a
+            else:
+                kingdom_list[root_b] += kingdom_list[root_a]
+                kingdom_list[root_a] = root_b
     
-    for union in adj_list[cur_kingdom]:
-        if visited_list[union] == False:
-            c_union += 1
-            visited_list[union] = True
-            bfs.append(union)
-bfs.append(h_kingdom)
-visited_list[h_kingdom] = True
-while bfs:
-    cur_kingdom = bfs.popleft()
+    c_kingdom, h_kingdom, opportunity = map(int, input().split(' '))
+    c_root = find_root(kingdom_list, c_kingdom)
+    h_root = find_root(kingdom_list, h_kingdom)
     
-    for union in adj_list[cur_kingdom]:
-        if visited_list[union] == False:
-            visited_list[union] = True
-            bfs.append(union)
-union_list = list()
-for i in range(n_kingdom+1):
-    if visited_list[i] == False:
-        size = len(union_list)
-        union_list.append(1)
-        bfs.append(i)
-        visited_list[i] = True
-        
-        while bfs:
-            cur_kingdom = bfs.popleft()
-            for union in adj_list[cur_kingdom]:
-                if visited_list[union] == False:
-                    visited_list[union] = True
-                    bfs.append(union)
-                    union_list[size-1] += 1
+    neutral_union = list()
+    
+    for kingdom in range(1, n_kingdom):
+        if kingdom_list[kingdom] < 0 and kingdom != c_root and kingdom != h_root:
+            neutral_union.append(kingdom_list[kingdom])
+    
+    neutral_union.sort()
+    n_merge = min(opportunity, len(neutral_union))
 
-union_list.sort(reverse=True)
-min_value = min(opportunity, len(union_list))
-for i in range(min_value):
-    c_union += union_list[i]
+    for i in range(n_merge):
+        kingdom_list[c_root] += neutral_union[i]
+    
+    return -kingdom_list[c_root]
 
-print(c_union)
+print(union_mating())
