@@ -16,7 +16,7 @@ def sum_mex(n_number):
         if a_list[i] == 0:
             sum_zero -= 1
             count += sum_zero
-    
+        if a_list[i] != 0: break
     return count
 
 n_number = int(input())
