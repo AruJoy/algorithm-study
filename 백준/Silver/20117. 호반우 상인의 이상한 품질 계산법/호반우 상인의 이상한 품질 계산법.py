@@ -8,9 +8,10 @@ def ho_ban_woo(n_cow):
     cow_list = deque(cow_list)
 
     count = 0
-    while cow_list:
-        count += cow_list[len(cow_list)//2]
-        cow_list.popleft()
+    length = len(cow_list)
+    for i in range(length):
+        index = (i + length)//2
+        count += cow_list[index]
 
     return count
 
