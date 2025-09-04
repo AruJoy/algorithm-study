@@ -1,10 +1,11 @@
 from sys import stdin
+from collections import deque
 import math
 input = stdin.readline
 
 def get_input():
     scale, n_tree, target_years = map(int, input().split(' '))
-    farm = [[list() for _ in range(scale)] for __ in range(scale)]
+    farm = [[deque() for _ in range(scale)] for __ in range(scale)]
     nutrition_map = []
 
     for _ in range(scale):
@@ -25,19 +26,20 @@ def spring(scale: int, farm: list, nutrition_map: list):
         for j in range(scale):
             if len(farm[i][j]) == 0 :
                 continue
-            last_index = -1
+            live_tree_count = 0
             for k in range(len(farm[i][j])):
                 if farm[i][j][k] <= nutrition_map[i][j][0]:
                     tree_count += 1
-                    last_index = k
+                    live_tree_count += 1
                     nutrition_map[i][j][0] -= farm[i][j][k]
                     farm[i][j][k] += 1
                     continue
                 nutrition_map[i][j][2] += math.floor(farm[i][j][k]/2)
-            if last_index == -1:
+            if live_tree_count == 0:
                 farm[i][j].clear()
                 continue
-            farm[i][j] = farm[i][j][0 : last_index + 1]
+            for _ in range(len(farm[i][j]) - live_tree_count):
+                farm[i][j].pop()
     return tree_count
 
 def summer(scale:int, nutrition_map:list):
@@ -62,7 +64,7 @@ def judge_tree(scale:int, current_y: int, current_x: int, farm:list):
                     or y < 0 or scale-1 < y):
                     continue
                 tree_count += 1
-                farm[y][x] = [1] + farm[y][x]
+                farm[y][x].appendleft(1)
     return tree_count
 
 def autumn(scale:int, farm: list):    
