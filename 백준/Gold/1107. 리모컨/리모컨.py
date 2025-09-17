@@ -11,8 +11,6 @@ def get_input():
         for key in broken_key_list:
             key_list.pop(key)
     numbers = 1 if target == 0 else len(str(abs(target)))
-    if target // 10 ** (numbers-1) == 1 and 10 ** (numbers) - target < 10:
-        return target, key_list, 10-broken_count, numbers+1
     return target, key_list, 10-broken_count, numbers
 
 def get_push_count(target, key_list, key_count, numbers ,current_value ,depth):
