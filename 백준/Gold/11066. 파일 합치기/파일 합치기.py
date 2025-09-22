@@ -3,18 +3,24 @@ input = stdin.readline
 from collections import deque
 
 def merge(chapter, c_list):
-    dp = [[[-1, 0] for _ in range(chapter)]for __ in range(chapter)]
+    dp = [[[0, 0] for _ in range(chapter)]for __ in range(chapter)]
+    prefix = [0 for i in range(chapter+1)]
+    for i in range(chapter):
+        prefix[i+1] = prefix[i]+c_list[i]
     for c in range(chapter):
-        dp[c][c][0] = c_list[c]
+        dp[c][c][1] = c-1
     for dx in range(1, chapter):
         for y in range(chapter - dx):
-            min_time = 2147483647
-            file = dp[y][y+dx-1][0] + dp[y+dx][y+dx][0]
-            for i in range(dx):
-                min_time = min(min_time, dp[y][y+i][1] + dp[y+1+i][y+dx][1] + file)
-            dp[y][y+dx][0] = file
-            dp[y][y+dx][1] = min_time 
-    return dp[0][chapter-1][1]
+            dp[y][y+dx][0] = 2147483647
+            start = dp[y][y+dx-1][1]
+            end = dp[y+1][y+dx][1]
+            file = prefix[y+dx+1] - prefix[y]
+            for i in range(start, end+1):
+                time = dp[y][i][0] + dp[i+1][y+dx][0] + file
+                if time < dp[y][y+dx][0]:
+                    dp[y][y+dx][0] = time
+                    dp[y][y+dx][1] = i
+    return dp[0][chapter-1][0]
 def main():
     t_count = int(input().strip())
     for _ in range(t_count):
