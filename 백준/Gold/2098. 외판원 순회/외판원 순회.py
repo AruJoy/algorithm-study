@@ -1,36 +1,35 @@
 from sys import stdin
 input = stdin.readline
-from collections import deque
-max_val = 10**9
-def tsp(scale, w_map, dp, mask, before_i, last):
-    min_val = max_val
-    if dp[before_i][mask] != -1:
-        return dp[before_i][mask]
-    for i in range(1, scale):
-        bit = 1 << (i-1)
-        if w_map[before_i][i] == 0: 
-            continue
-        if mask & bit:
-            continue
-        cost = 0
-        if dp[i][mask|bit] != -1:
-            cost = w_map[before_i][i] + dp[i][mask|bit]
-        else: 
-            cost = w_map[before_i][i] + tsp(scale, w_map, dp, mask|bit, i, last)
-        min_val = min(min_val, cost)
-    dp[before_i][mask] = min_val
-    return min_val
+
 def main():
-    scale = int(input().strip())
-    w_map = []
-    for _ in range(scale):
-        w_map.append(list(map(int, input().split())))
-    last = (1 << (scale-1))-1
-    dp = [[-1 for _ in range(last+1)] for __ in range(scale)]
-    for i in range(scale):
-        dp[i][-1] = w_map[i][0] if w_map[i][0] != 0 else max_val
-    print(tsp(scale, w_map, dp, 0, 0, last))
-    return
+    n = int(input().strip())
+    w_map = [list(map(int, input().split())) for _ in range(n)]
+
+    INF = 10**9
+    FULL = (1 << n) - 1
+    dp = [[INF] * (1 << n) for _ in range(n)]
+
+    dp[0][1] = 0
+
+    for mask in range(1 << n):
+        for u in range(n):
+            if dp[u][mask] == INF:
+                continue
+            for v in range(n):
+                if mask & (1 << v):
+                    continue
+                if w_map[u][v] == 0:
+                    continue
+                next_mask = mask | (1 << v)
+                dp[v][next_mask] = min(dp[v][next_mask],
+                                        dp[u][mask] + w_map[u][v])
+
+    ans = INF
+    for u in range(n):
+        if w_map[u][0] != 0:
+            ans = min(ans, dp[u][FULL] + w_map[u][0])
+
+    print(ans)
 
 if __name__ == "__main__":
     main()
