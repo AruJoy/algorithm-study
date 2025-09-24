@@ -1,8 +1,8 @@
 from sys import stdin
 input = stdin.readline
 from collections import deque
-def bfs(scale, matrix, m, dx, dy, max_in_m, min_in_m):
-    for low in range(min_in_m, max_in_m - m + 1):
+def bfs(scale, matrix, m, dx, dy, max_val, min_val):
+    for low in range(min_val, max_val - m + 1):
         high = low + m
         if not (low <= matrix[0][0] <= high and
                 low <= matrix[scale-1][scale-1] <= high):
@@ -35,13 +35,11 @@ def main():
     min_val = min(min(row) for row in matrix)
     max_val = max(max(row) for row in matrix)
     lo, hi = 0, max_val - min_val
-    max_in_m = max_val
-    min_in_m = min_val
     dy = [0, 0, -1, 1]
     dx = [-1, 1, 0, 0]
     while True:
         m = (lo+hi)//2
-        result = bfs(scale, matrix, m, dx, dy, max_in_m, min_in_m)
+        result = bfs(scale, matrix, m, dx, dy, max_val, min_val)
         if result:
             hi = m
         else:
