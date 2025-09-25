@@ -27,7 +27,7 @@ def put_papers(paper_list, board, cur_y, cur_x, depth, best):
     for i in range(cur_y, 10):
         for j in range(cur_x if i == cur_y else 0, 10):
             if board[i][j] == 1:
-                all_0 == False
+                all_0 = False
                 for k in range(5):
                     size = paper_size[k]
                     if 10 - i < size or 10 - j < size or paper_list[k] == 0:
