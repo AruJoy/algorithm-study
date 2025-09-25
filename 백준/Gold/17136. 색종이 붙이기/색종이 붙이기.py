@@ -17,10 +17,13 @@ def restore_paper(board, start_y, start_x, size, dy, dx):
                 return
             board[start_y + i][start_x + j] = 1
     return
-def put_papers(paper_list, board, cur_y, cur_x):
+def put_papers(paper_list, board, cur_y, cur_x, depth, best):
+    if depth >= best[0]:
+        return -1
     paper_size = [5, 4, 3, 2, 1]
     min_answer = INF
     all_0 = True
+    iter_break = False
     for i in range(cur_y, 10):
         for j in range(cur_x if i == cur_y else 0, 10):
             if board[i][j] == 1:
@@ -32,18 +35,20 @@ def put_papers(paper_list, board, cur_y, cur_x):
                     success, y, x = put_paper(board, i, j, size)
                     if success:
                         paper_list[k] -= 1
-                        result = put_papers(paper_list, board, i, j)
+                        result = put_papers(paper_list, board, i, j, depth+1, best)
                         paper_list[k] += 1
                         if result != -1:
-                            answer = 1 + result
-                            min_answer = min(min_answer, answer)
+                            min_answer = min(min_answer, result)
                     restore_paper(board, i, j, size, y, x)
-                if min_answer == INF:
-                    return -1
-                return min_answer
+                iter_break = True
+            if iter_break:
+                break
             if i == 9 and j == 9:
                 if all_0:
-                    return 0
+                    best[0] = min(best[0], depth)
+                    return depth
+        if iter_break:
+            break
     return -1 if min_answer == INF else min_answer
 
 def main():
@@ -52,7 +57,8 @@ def main():
     for i in range(10):
         row = list(map(int, input().split()))
         board.append(row)
-    print(put_papers(paper_list, board, 0, 0))
+    best = [INF]
+    print(put_papers(paper_list, board, 0, 0, 0,best))
     return
 if __name__ == "__main__":
     main()
