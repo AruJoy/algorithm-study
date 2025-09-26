@@ -8,12 +8,9 @@ def main():
     numbers = list(map(int, input().split()))
     sum_list = [0 for _ in range(length)]
     sum_list[0] = numbers[0]
-    sum_list2 = [0 for _ in range(length)]
-    sum_list2[0] = numbers[-1]
     for i in range(1,length):
         sum_list[i] = sum_list[i-1]+numbers[i]
-        sum_list2[i] = sum_list2[i-1] +numbers[-i-1] 
-    if sum_list[0] >= lo or sum_list2[0] >= lo:
+    if sum_list[0] >= lo or sum_list[length-1] - sum_list[length-2] >= lo:
         print(1)
         return
     if sum_list[-1] < lo:
@@ -23,7 +20,7 @@ def main():
     i = 1
     j = 0
     while i < length:
-        while sum_list[i] - sum_list[j] >= lo or sum_list2[i] - sum_list2[i] >= lo:
+        while sum_list[i] - sum_list[j] >= lo:
             answer = min(i - j, answer)
             j += 1
         i += 1
