@@ -20,13 +20,13 @@ def main():
     for _ in range(n_load):
         u, v, w = map(int, input().split())
         u, v = u-1, v-1
-        heappush(adj_list, (w, u, v))
+        adj_list.append((w, u, v))
+    adj_list.sort()
     total_w = 0
     large_w = 0
     union_table = [i for i in range(n_house)]
 
-    while adj_list:
-        w, u, v = heappop(adj_list)
+    for w, u, v in adj_list:
         u_root, v_root = find(union_table, u), find(union_table, v)
         if u_root == v_root:
             continue
