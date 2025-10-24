@@ -34,6 +34,7 @@ def get_answer(names, degree_map):
     print(*ancients)
     for name in names:
         if name in answer_map:
+            answer_map[name].sort()
             print(name +
                   " " +
                   str(len(answer_map[name])) + " " +
